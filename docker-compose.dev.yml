@@ -1,0 +1,47 @@
+services:
+    mic-backend:
+        container_name: mic-backend
+        restart: always
+        build:
+            context: .
+            dockerfile: Dockerfile.dev
+        ports:
+            - '3017:3000'
+        volumes:
+            - .:/app
+        depends_on:
+            mic_mysql:
+                condition: service_healthy
+        networks:
+            - network-mic
+        command: sh -c "yarn install && yarn start:dev"
+
+    mic_mysql:
+        container_name: mic_mysql
+        restart: always
+        image: mysql:8.0.36
+        environment:
+            MYSQL_ROOT_PASSWORD: pztMg1y02IY2ECwYUExWCwuwMIZNR8jyPItIsMNZSIoKgPyB6x
+            MYSQL_DATABASE: mic
+            MYSQL_USER: mic
+            MYSQL_PASSWORD: BqPHKVCEkrn9NO1bl5TdO5r8gjrf36VAERfmg92I3ksCIkmh3a
+        volumes:
+            - mysql:/var/lib/mysql
+            - ./backup:/backup
+            - ./init.sql:/docker-entrypoint-initdb.d/a.sql
+            - ./backup/mic.sql:/docker-entrypoint-initdb.d/b.sql
+            - ./.my.cnf:/.my.cnf
+        healthcheck:
+            test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+            interval: 5s
+            timeout: 5s
+            retries: 10
+        networks:
+            - network-mic
+networks:
+    network-mic:
+        driver: bridge
+        external: true
+
+volumes:
+    mysql:
