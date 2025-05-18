@@ -1,20 +1,20 @@
 services:
-    # mic-backend:
-    #     container_name: mic-backend
-    #     restart: always
-    #     build:
-    #         context: .
-    #         dockerfile: Dockerfile.dev
-    #     ports:
-    #         - '3017:3000'
-    #     volumes:
-    #         - .:/app
-    #     depends_on:
-    #         mic_mysql:
-    #             condition: service_healthy
-    #     networks:
-    #         - network-mic
-    #     command: sh -c "yarn install && yarn start:dev"
+    mic-backend:
+        container_name: mic-backend
+        restart: always
+        build:
+            context: .
+            dockerfile: Dockerfile.dev
+        ports:
+            - '3018:3000'
+        volumes:
+            - .:/app
+        depends_on:
+            mic_mysql:
+                condition: service_healthy
+        networks:
+            - network-mic
+        command: sh -c "yarn install && yarn start:dev"
 
     mic_mysql:
         container_name: mic_mysql
